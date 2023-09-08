@@ -1,0 +1,50 @@
+{% extends 'applications/base.html' %}
+{% load tz %}
+
+{% block content %}
+<div class="container-fluid">
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col" class="col-1">id</th>
+        <th scope="col" class="col-2">Фамилия</th>
+        <th scope="col" class="col-2">Имя</th>
+        <th scope="col" class="col-2">Отчество</th>
+        <th scope="col" class="col-2">Дата создания</th>
+        <th scope="col" class="col-2">Автор заявки</th>
+        <th scope="col" class="col-2">Закрыть заявку</th>
+    </tr>
+    </thead>
+    {% for person in persons %}
+    <tbody>
+    <tr>
+        <td>{{person.pk}}</td>
+        <td>{{person.last_name}}</td>
+        <td>{{person.first_name}}</td>
+        <td>{{person.patronymic}}</td>
+        <td>{{person.date_created|date:"d M Y"}} {{ person.date_created|time:"H:i" }}</td>
+        <td>{{person.id_appl.last_name}} {{person.id_appl.first_name}} {{person.id_appl.patronymic}}</td>
+        <td><a class="btn btn-success" href="{% url 'applications:off_person' person.id %}">Закрыть заявку</a></td>
+    </tr>
+    </tbody>
+    {% endfor %}
+</table>
+    <div class="pagination">
+    <span class="step-links">
+        {% if persons.has_previous %}
+            <a class="btn btn-outline-primary" href="?page=1">первая</a>
+            <a class="btn btn-outline-primary" href="?page={{ persons.previous_page_number }}">предыдущая</a>
+        {% endif %}
+
+        <span class="current">
+            Страница {{ persons.number }} из {{ persons.paginator.num_pages }}
+        </span>
+
+        {% if persons.has_next %}
+            <a class="btn btn-outline-primary" href="?page={{ persons.next_page_number }}">следующая</a>
+            <a class="btn btn-outline-primary" href="?page={{ persons.paginator.num_pages }}">последняя</a>
+        {% endif %}
+    </span>
+    </div>
+</div>
+{% endblock %}

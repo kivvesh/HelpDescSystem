@@ -1,0 +1,53 @@
+{% extends 'applications/base.html' %}
+{% load tz %}
+
+{% block content %}
+<div class="container-fluid">
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col" class="col-1">id</th>
+            <th scope="col" class="col-2">Наименование организации</th>
+            <th scope="col" class="col-1">ИНН организации</th>
+            <th scope="col" class="col-2">Дата создания</th>
+            <th scope="col" class="col-1">Автор заявки</th>
+            <th scope="col" class="col-2">Оганизация автора</th>
+            <th scope="col" class="col-3" colspan="2" style="text-align: center;">Действие</th>
+        </tr>
+        </thead>
+        {% for organization in organizations %}
+        <tbody>
+        <tr>
+            <td>{{organization.pk}}</td>
+            <td>{{organization.name}}</td>
+            <td>{{organization.inn}}</td>
+            <td>{{organization.date_created|date:"d M Y"}} {{ organization.date_created|time:"H:i" }}</td>
+            <td> {{organization.id_appl.last_name}} {{organization.id_appl.first_name}} {{organization.id_appl.patronymic}}</td>
+            <td>{{organization.id_appl.org}}</td>
+            <td><a class="btn btn-success" href="{% url 'applications:off_org' organization.pk  %}">Закрыть заявку</a>
+            </td>
+            <td><a class="btn btn-danger" href="{% url 'applications:repl_org' organization.pk  %}">Дубликат</a>
+            </td>
+        </tr>
+        </tbody>
+        {% endfor %}
+    </table>
+    <div class="pagination">
+    <span class="step-links">
+        {% if organizations.has_previous %}
+            <a class="btn btn-outline-primary" href="?page=1">первая</a>
+            <a class="btn btn-outline-primary" href="?page={{ organizations.previous_page_number }}">предыдущая</a>
+        {% endif %}
+
+        <span class="current">
+            Страница {{ organizations.number }} из {{ organizations.paginator.num_pages }}
+        </span>
+
+        {% if organizations.has_next %}
+            <a class="btn btn-outline-primary" href="?page={{ organizations.next_page_number }}">следующая</a>
+            <a class="btn btn-outline-primary" href="?page={{ organizations.paginator.num_pages }}">последняя</a>
+        {% endif %}
+    </span>
+    </div>
+</div>
+{% endblock %}

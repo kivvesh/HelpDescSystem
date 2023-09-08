@@ -1,0 +1,48 @@
+{% extends 'applications/base.html' %}
+{% load tz %}
+{% block content %}
+{% load static %}
+
+<div class="card mb-3">
+    <div class="row g-0">
+        <div class="col-md-4">
+            <img src="{% static '/img/zayavka.jpg' %}" class="img-fluid rounded-start" alt="...">
+        </div>
+        <div class="col-md-8">
+            <div class="card-body">
+                <h5 class="card-title"> Заявка {{application.system}}</h5>
+                <p class="card-text">{{application.text}}</p>
+                <p class="card-text"><small class="text-muted">Заявка создана: {{application.date_created|date:"d M Y"}}
+                    {{ application.date_created|time:"H:i" }}</small></p>
+                <p class="card-text"><small class="text-muted">
+                    Заявитель: {{ application.id_appl.last_name }} {{ application.id_appl.first_name }}
+                    {{application.id_appl.patronymic}};
+                    Телефон: {{ application.id_appl.phone }}</small></p>
+                {% if application.status is False%}
+                <form action="" method="post" >
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <input type="submit" class="btn btn-success" value="Закрыть заявку"/>
+                </form>
+                {% else %}
+                <p class="card-text"><small class="text-muted">Заявка закрыта: {{application.date_completion|date:"d M Y"}} {% timezone "Europe/Samara" %}{{ application.date_completion|time:"H:i" }}{% endtimezone %}</small></p>
+                {% endif %}
+                <hr>
+                {% if  application.status is False %}
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                        Шаблонный ответ
+                    </button>
+                    <ul class="dropdown-menu">
+                        {% for template in templates %}
+                        <li><a class="dropdown-item" href="{% url 'applications:templ_appl' application.id template.id %}">{{template.name}}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

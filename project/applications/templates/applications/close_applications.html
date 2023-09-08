@@ -1,0 +1,75 @@
+{% extends 'applications/base.html' %}
+{% load tz %}
+
+{% block content %}
+<div class="container-fluid">
+<p>
+</p>
+<div class="container-fluid">
+    <p>
+    <form action="" method="GET">
+        <p>
+            От <input type="date" name="start">
+            До <input type="date" name="stop">
+            {% for system in systems %}
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" name="system" id="{{system.id}}" value="{{system.id}}">
+            <label class="form-check-label" for="{{system.id}}">{{system.name}}</label>
+        </div>
+        {% endfor %}
+        <input type="submit" value="Применить">
+        </p>
+    </form>
+    </p>
+</div>
+
+
+<p></p>
+<div class="container-fluid">
+    <table class="table table-dark">
+        <thead>
+        <div class="row">
+            <tr class="table-active">
+                <th scope="col" class="col-1">id</th>
+                <th scope="col" class="col-1">Система</th>
+                <th scope="col" class="col-6">Текст обращения</th>
+                <th scope="col" class="col-1">Дата создания</th>
+                <th scope="col" class="col-1">Подробнее</th>
+            </tr>
+        </div>
+        </thead>
+        {% for application in applications %}
+        <div class="row">
+            <tbody>
+            <tr>
+                <td>{{application.pk}}</td>
+                <td>{{application.system}}</td>
+                <td>{{application.text|truncatewords:7}}</td>
+                <td>{{application.date_created|date:"d M Y"}} {{ application.date_created|time:"H:i" }}</td>
+                <td><a class="btn btn-primary" href="{% url 'applications:appl' application.id %}">Подробнее</a></td>
+                </td>
+            </tr>
+            </tbody>
+        </div>
+        {% endfor %}
+    </table>
+    <div class="pagination">
+    <span class="step-links">
+        {% if applications.has_previous %}
+            <a class="btn btn-outline-primary" href="?page=1">первая</a>
+            <a class="btn btn-outline-primary" href="?page={{ applications.previous_page_number }}">предыдущая</a>
+        {% endif %}
+
+        <span class="current">
+            Страница {{ applications.number }} из {{ applications.paginator.num_pages }}
+        </span>
+
+        {% if applications.has_next %}
+            <a class="btn btn-outline-primary" href="?page={{ applications.next_page_number }}">следующая</a>
+            <a class="btn btn-outline-primary" href="?page={{ applications.paginator.num_pages }}">последняя</a>
+        {% endif %}
+    </span>
+    </div>
+</div>
+</div>
+{% endblock %}

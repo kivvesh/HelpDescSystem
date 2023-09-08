@@ -1,0 +1,55 @@
+{% extends 'applications/base.html' %}
+{% load tz %}
+
+{% block content %}
+<div class="container-fluid">
+    <p>
+    </p>
+    <form action="" method="get">
+        <div class="container-fluid">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">ФИО</span>
+                </div>
+                <input placeholder="Фамилия" name="s_name" type="text" aria-label="Фамилия" class="form-control">
+                <input placeholder="Имя" name="f_name" type="text" aria-label="Имя" class="form-control">
+                <input placeholder="Отчество" name="patr" type="text" aria-label="Отчество" class="form-control">
+                <input class="btn btn-outline-dark" type="submit" value="Фильтровать по заявителю"/>
+            </div>
+        </div>
+    </form>
+
+
+    <p></p>
+    <div class="container-fluid">
+        <table class="table table-dark">
+            <thead>
+            <div class="row">
+                <tr class="table-active">
+                    <th scope="col" class="col-1">id</th>
+                    <th scope="col" class="col-1">Система</th>
+                    <th scope="col" class="col-6">Текст обращения</th>
+                    <th scope="col" class="col-1">Дата создания</th>
+                    <th scope="col" class="col-1">Подробнее</th>
+                </tr>
+            </div>
+            </thead>
+            {% for application in applications %}
+            <div class="row">
+                <tbody>
+                <tr>
+                    <td>{{application.pk}}</td>
+                    <td>{{application.system}}</td>
+                    <td>{{application.text|truncatewords:7}}</td>
+                    <td>{{application.date_created|date:"d M Y"}} {{ application.date_created|time:"H:i" }}</td>
+                    <td><a class="btn btn-primary" href="{% url 'applications:appl' application.id %}">Подробнее</a>
+                    </td>
+                    </td>
+                </tr>
+                </tbody>
+            </div>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+{% endblock %}
